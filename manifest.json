@@ -5,7 +5,7 @@
   "version": "1.0.0",
   "author": "CloudDown",
   "license": "MIT",
-  "description": "Keeps AI agents working while the laptop lid is closed.",
+  "description": "Keep your laptop awake with one click. Inhibits lid-close and idle suspend while you work.",
   "kinds": [
     "bar-widget",
     "service"
@@ -16,7 +16,7 @@
   },
   "barWidget": {
     "displayName": "Fast Lid",
-    "description": "One-click lid and idle sleep inhibitor that keeps agents running with the laptop closed.",
+    "description": "Toggle lid-close and idle suspend from the Omarchy bar.",
     "category": "System",
     "allowMultiple": false,
     "defaultSection": "right",
