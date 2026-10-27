@@ -1,8 +1,8 @@
 # Fast Lid guide
 
 Fast Lid is an Omarchy bar toggle for keeping a laptop awake while its lid is
-closed or it is otherwise idle. It is intended for long-running terminal work,
-including AI agent sessions.
+closed or it is otherwise idle. It is especially useful for leaving long-running
+AI coding agents and terminal sessions working unattended.
 
 ## How it works
 

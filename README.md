@@ -1,5 +1,5 @@
 <h1 align="center">Fast Lid</h1>
-<p align="center">Keep your laptop awake with one click. An unofficial <a href="https://omarchy.org">Omarchy</a> bar widget.</p>
+<p align="center">Let AI agents keep working while your laptop lid is closed. An unofficial <a href="https://omarchy.org">Omarchy</a> bar widget.</p>
 
 <p align="center"><img src="preview.png" width="100%" alt="Fast Lid concept illustration showing the enabled state" /></p>
 
