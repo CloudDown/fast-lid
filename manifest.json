@@ -1,0 +1,30 @@
+{
+  "schemaVersion": 1,
+  "id": "clouddown.fast-lid",
+  "name": "Fast Lid",
+  "version": "1.0.0",
+  "author": "CloudDown",
+  "license": "MIT",
+  "description": "Keeps AI agents working while the laptop lid is closed.",
+  "kinds": [
+    "bar-widget",
+    "service"
+  ],
+  "entryPoints": {
+    "barWidget": "BarWidget.qml",
+    "service": "Service.qml"
+  },
+  "barWidget": {
+    "displayName": "Fast Lid",
+    "description": "One-click lid and idle sleep inhibitor that keeps agents running with the laptop closed.",
+    "category": "System",
+    "allowMultiple": false,
+    "defaultSection": "right",
+    "aliases": [
+      "lid",
+      "clamshell",
+      "agents-awake",
+      "keep-awake"
+    ]
+  }
+}
