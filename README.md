@@ -16,6 +16,12 @@ A plain laptop means the hold is on; a slashed laptop means it is off. Click
 it once to toggle. The screen still locks normally; only suspend is
 suppressed.
 
+## Dependencies
+
+Fast Lid uses the `systemd-inhibit` command already provided by systemd and
+Omarchy's `omarchy-notification-send` helper. It does not install packages,
+modify system configuration, or require an account or network connection.
+
 ## Safety
 
 A closed laptop with running agents can get hot and will drain the battery.
@@ -43,7 +49,7 @@ omarchy-shell shell rescanPlugins
 omarchy plugin enable clouddown.fast-lid right --before omarchy.power
 ```
 
-## Remove
+## Removing
 
 ```bash
 omarchy plugin disable clouddown.fast-lid
@@ -51,6 +57,8 @@ omarchy plugin remove clouddown.fast-lid
 ```
 
 Disabling the plugin destroys the service, which releases the inhibitor.
+Fast Lid writes no persistent files. Removing it leaves no service, process,
+configuration change, or other plugin state behind.
 
 ## Files
 

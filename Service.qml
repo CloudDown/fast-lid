@@ -38,7 +38,7 @@ Item {
   // Detached: no helper process object or output buffer lives in the shell.
   function notify(title, body, urgency) {
     var args = [
-      "omarchy-notification-send",
+      "/usr/share/omarchy/bin/omarchy-notification-send",
       "--app-name", "Fast Lid",
       "-u", urgency || "low",
       "-t", "6000",
@@ -57,7 +57,7 @@ Item {
     id: inhibitor
     running: false
     command: [
-      "systemd-inhibit",
+      "/usr/bin/systemd-inhibit",
       "--what=handle-lid-switch:idle",
       "--who=Omarchy Fast Lid",
       "--why=Keep agents working while the laptop lid is closed",
@@ -65,18 +65,12 @@ Item {
       "sleep", "infinity"
     ]
 
-    stderr: StdioCollector {
-      id: inhibitorError
-      waitForEnd: true
-    }
-
     onExited: function(exitCode) {
       confirmTimer.stop()
       if (!root.wantHeld) return
 
       root.wantHeld = false
-      var detail = String(inhibitorError.text || "").trim()
-      root.lastError = detail ? detail.split("\n")[0] : "systemd-inhibit exited unexpectedly"
+      root.lastError = "systemd-inhibit exited unexpectedly"
       root.notify("Lid hold failed", root.lastError, "critical")
     }
   }
