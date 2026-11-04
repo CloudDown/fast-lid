@@ -13,14 +13,6 @@ Item {
   readonly property bool held: inhibitor.running
   property bool wantHeld: false
   property string lastError: ""
-  // Bar widget watches statusTick and shows a tiny toast under the icon.
-  property string statusLabel: ""
-  property int statusTick: 0
-
-  function flashStatus(label) {
-    statusLabel = String(label || "")
-    statusTick++
-  }
 
   function setHeld(next) {
     next = !!next
@@ -35,7 +27,7 @@ Item {
     } else {
       confirmTimer.stop()
       if (inhibitor.running) inhibitor.running = false
-      flashStatus("OFF")
+      notify("Lid OFF", "", "low")
     }
   }
 
@@ -43,7 +35,7 @@ Item {
     setHeld(!held)
   }
 
-  // Only used for real failures; success ON/OFF feedback is the bar toast.
+  // Detached: no helper process object or output buffer lives in the shell.
   function notify(title, body, urgency) {
     var args = [
       "/usr/share/omarchy/bin/omarchy-notification-send",
@@ -91,7 +83,7 @@ Item {
     repeat: false
     onTriggered: {
       if (!root.held) return
-      root.flashStatus("ON")
+      root.notify("Lid ON", "", "low")
     }
   }
 
