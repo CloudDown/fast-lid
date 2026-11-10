@@ -23,11 +23,8 @@ Item {
 
     if (next) {
       if (!inhibitor.running) inhibitor.running = true
-      confirmTimer.restart()
     } else {
-      confirmTimer.stop()
       if (inhibitor.running) inhibitor.running = false
-      notify("Lid OFF", "", "low")
     }
   }
 
@@ -35,7 +32,7 @@ Item {
     setHeld(!held)
   }
 
-  // Detached: no helper process object or output buffer lives in the shell.
+  // Only failures warrant a desktop notification. Success is shown at the bar.
   function notify(title, body, urgency) {
     var args = [
       "/usr/share/omarchy/bin/omarchy-notification-send",
@@ -66,7 +63,6 @@ Item {
     ]
 
     onExited: function(exitCode) {
-      confirmTimer.stop()
       if (!root.wantHeld) return
 
       root.wantHeld = false
@@ -75,20 +71,7 @@ Item {
     }
   }
 
-  // Give the inhibitor a moment to fail (polkit, missing systemd) before
-  // claiming success. The process stays alive for as long as the hold is on.
-  Timer {
-    id: confirmTimer
-    interval: 700
-    repeat: false
-    onTriggered: {
-      if (!root.held) return
-      root.notify("Lid ON", "", "low")
-    }
-  }
-
   Component.onDestruction: {
-    confirmTimer.stop()
     root.wantHeld = false
     if (inhibitor.running) inhibitor.running = false
   }

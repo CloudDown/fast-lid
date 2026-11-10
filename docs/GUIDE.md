@@ -20,6 +20,8 @@ configuration.
 - Solid laptop icon: hold enabled.
 - Slashed laptop icon: hold disabled.
 - Click either icon on any bar surface to toggle the shared state.
+- A small themed ON/OFF card appears immediately beside the clicked icon;
+  only failures send an Omarchy notification.
 - The `clouddown.fast-lid` shell toggle can also be used from Omarchy's shell
   interface.
 
@@ -36,7 +38,7 @@ omarchy plugin add https://github.com/CloudDown/fast-lid.git --enable
 omarchy plugin remove clouddown.fast-lid
 ```
 
-Fast Lid uses Omarchy's `omarchy-notification-send` helper and systemd's
+Fast Lid uses Omarchy's `omarchy-notification-send` helper for failures and systemd's
 `systemd-inhibit`; both are provided by a standard Omarchy installation. It
 does not download software, access the network, or write persistent state.
 Removing the plugin leaves no process, service, configuration change, or

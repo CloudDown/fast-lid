@@ -1,5 +1,6 @@
 import QtQuick
 import qs.Commons
+import qs.Commons as Commons
 import qs.Ui
 
 BarWidget {
@@ -15,6 +16,29 @@ BarWidget {
   // Other bar widgets read this instead of bar.foreground: on a transparent
   // bar it is the black or white the bar computed against the wallpaper.
   readonly property color ink: bar ? bar.barForeground : Commons.Color.foreground
+
+  property bool feedbackOpen: false
+  property string feedbackText: ""
+
+  function close() {
+    feedbackTimer.stop()
+    feedbackOpen = false
+  }
+
+  Connections {
+    target: root.hold
+    function onLastErrorChanged() {
+      if (root.hold.lastError) {
+        root.close()
+      }
+    }
+  }
+
+  Timer {
+    id: feedbackTimer
+    interval: 1300
+    onTriggered: root.close()
+  }
 
   implicitWidth: button.implicitWidth
   implicitHeight: button.implicitHeight
@@ -65,8 +89,37 @@ BarWidget {
       }
     }
     onPressed: function(buttonCode) {
-      if (buttonCode === Qt.LeftButton && root.hold)
+      if (buttonCode === Qt.LeftButton && root.hold) {
+        root.feedbackText = root.held ? "OFF" : "ON"
+        root.feedbackOpen = true
+        feedbackTimer.restart()
         root.hold.toggle()
+      }
+    }
+  }
+
+  // Passive native popout: no keyboard focus or outside-click grab for a
+  // short status acknowledgement. PopupCard handles the bar edge and theme.
+  PopupCard {
+    id: feedback
+    anchorItem: root
+    bar: root.bar
+    owner: root
+    open: root.feedbackOpen
+    triggerMode: "hover"
+    padding: Style.space(8)
+    contentWidth: Style.space(62)
+    contentHeight: feedback.fittedContentHeight(label.implicitHeight)
+
+    Text {
+      id: label
+      anchors.centerIn: parent
+      textFormat: Text.PlainText
+      text: root.feedbackText
+      color: Commons.Color.popups.text
+      font.family: root.bar ? root.bar.fontFamily : Style.font.family
+      font.pixelSize: Style.font.body
+      font.bold: true
     }
   }
 }

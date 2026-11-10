@@ -2,7 +2,7 @@
   "schemaVersion": 1,
   "id": "clouddown.fast-lid",
   "name": "Fast Lid",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "author": "CloudDown",
   "license": "MIT",
   "description": "Keep AI agents working while your laptop lid is closed. Inhibits lid-close and idle suspend with one click.",
