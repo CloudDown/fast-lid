@@ -25,9 +25,12 @@ configuration.
   steps, or the far right (ON) for an unlimited hold. Selecting a duration starts a
   fresh timer, and the hold stops when that timer expires. The panel displays
   the remaining time in hours, minutes, and seconds.
-- Click outside the panel to close it. Only failures send an Omarchy notification.
+- Move the pointer away from the icon and panel, or click outside, to close it.
+  Only failures send an Omarchy notification.
 - The `clouddown.fast-lid` shell toggle can also be used from Omarchy's shell
   interface.
+
+![Fast Lid panel: a timed hold and the off state](panel.png)
 
 ## Safety
 

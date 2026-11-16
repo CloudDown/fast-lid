@@ -18,7 +18,8 @@ left-click it to open the slider without toggling. The left end turns Fast Lid
 off; the other positions select 15 minutes to 8 hours in 15-minute increments,
 and the far right shows ON and keeps it on indefinitely. The hold ends when the chosen time
 expires or the plugin service stops. A solid laptop means the hold is on; a
-slashed laptop means it is off. The hold is shared across bar surfaces. Only
+slashed laptop means it is off. The hold is shared across bar surfaces. Move the
+pointer away from the icon and panel, or click outside, to close the panel. Only
 failures send a desktop notification.
 
 Fast Lid inhibits lid-close and idle suspend only. Explicit suspend, shutdown,

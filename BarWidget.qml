@@ -18,6 +18,22 @@ BarWidget {
   readonly property color ink: bar ? bar.barForeground : Commons.Color.foreground
 
   property bool panelOpen: false
+  readonly property var hoverSlot: {
+    var item = root.parent
+    while (item) {
+      if ("activeItem" in item && item.activeItem === root && "hovered" in item)
+        return item
+      item = item.parent
+    }
+    return null
+  }
+
+  function updateHoverClose() {
+    if (!panelOpen || (hoverSlot ? hoverSlot.hovered : button.tooltipHovered) || panel.containsMouse)
+      hoverCloseTimer.stop()
+    else
+      hoverCloseTimer.restart()
+  }
 
   function durationLabel(step) {
     if (step <= 0) return "OFF"
@@ -36,7 +52,20 @@ BarWidget {
   }
 
   function close() {
+    hoverCloseTimer.stop()
     panelOpen = false
+  }
+
+  Timer {
+    id: hoverCloseTimer
+    interval: 250
+    onTriggered: root.close()
+  }
+
+  Connections {
+    target: root.hoverSlot
+    ignoreUnknownSignals: true
+    function onHoveredChanged() { root.updateHoverClose() }
   }
 
   Connections {
@@ -55,6 +84,7 @@ BarWidget {
     id: button
     anchors.fill: parent
     bar: root.bar
+    onTooltipHoveredChanged: if (!root.hoverSlot) root.updateHoverClose()
     iconComponent: Component {
       Item {
         width: 16
@@ -109,10 +139,12 @@ BarWidget {
   }
 
   PopupCard {
+    id: panel
     anchorItem: root
     bar: root.bar
     owner: root
     open: root.panelOpen
+    onContainsMouseChanged: root.updateHoverClose()
     contentWidth: fittedContentWidth(Style.space(280))
     contentHeight: fittedContentHeight(content.implicitHeight)
 

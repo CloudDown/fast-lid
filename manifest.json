@@ -2,10 +2,10 @@
   "schemaVersion": 1,
   "id": "clouddown.fast-lid",
   "name": "Fast Lid",
-  "version": "1.2.0",
+  "version": "1.3.0",
   "author": "CloudDown",
   "license": "MIT",
-  "description": "Keep AI agents working while your laptop lid is closed. Inhibits lid-close and idle suspend with one click.",
+  "description": "Keep AI agents working while your laptop lid is closed. Inhibits lid-close and idle suspend, with timed holds from 15 minutes to 8 hours.",
   "kinds": [
     "bar-widget",
     "service"
@@ -16,7 +16,7 @@
   },
   "barWidget": {
     "displayName": "Fast Lid",
-    "description": "Keep AI agents running while your laptop is closed. Toggle lid-close and idle suspend from the bar.",
+    "description": "Keep AI agents running while your laptop is closed. Toggle lid-close and idle suspend from the bar, with a duration slider.",
     "category": "System",
     "allowMultiple": false,
     "defaultSection": "right",
