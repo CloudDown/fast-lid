@@ -13,10 +13,12 @@ Remove: `omarchy plugin remove clouddown.fast-lid`.
 
 ## Usage
 
-Click the laptop icon in the bar to toggle Fast Lid. A solid laptop means the
-hold is on; a slashed laptop means it is off. The hold is shared across bar
-surfaces and ends when the plugin service stops. A compact, themed ON/OFF panel
-appears immediately at the clicked icon and closes after 1.3 seconds. Only
+Right-click the laptop icon to toggle Fast Lid and show the duration slider;
+left-click it to open the slider without toggling. The left end turns Fast Lid
+off; the other positions select 15 minutes to 8 hours in 15-minute increments,
+and the far right shows ON and keeps it on indefinitely. The hold ends when the chosen time
+expires or the plugin service stops. A solid laptop means the hold is on; a
+slashed laptop means it is off. The hold is shared across bar surfaces. Only
 failures send a desktop notification.
 
 Fast Lid inhibits lid-close and idle suspend only. Explicit suspend, shutdown,

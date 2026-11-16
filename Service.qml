@@ -13,6 +13,23 @@ Item {
   readonly property bool held: inhibitor.running
   property bool wantHeld: false
   property string lastError: ""
+  // 0 is off; 33 is unlimited; other values are 15-minute increments.
+  property int durationStep: 0
+  property double expiresAt: 0
+  property int remainingSeconds: 0
+
+  function updateCountdown() {
+    remainingSeconds = expiresAt > 0 ? Math.max(0, Math.ceil((expiresAt - Date.now()) / 1000)) : 0
+    if (expiresAt > 0 && remainingSeconds === 0) setHeld(false)
+  }
+
+  function setDuration(step) {
+    step = Math.max(0, Math.min(33, Math.round(Number(step) || 0)))
+    durationStep = step
+    expiresAt = step > 0 && step < 33 ? Date.now() + step * 15 * 60 * 1000 : 0
+    updateCountdown()
+    setHeld(step > 0)
+  }
 
   function setHeld(next) {
     next = !!next
@@ -22,8 +39,12 @@ Item {
     lastError = ""
 
     if (next) {
+      if (durationStep === 0) durationStep = 33
       if (!inhibitor.running) inhibitor.running = true
     } else {
+      durationStep = 0
+      expiresAt = 0
+      remainingSeconds = 0
       if (inhibitor.running) inhibitor.running = false
     }
   }
@@ -32,17 +53,11 @@ Item {
     setHeld(!held)
   }
 
-  // Only failures warrant a desktop notification. Success is shown at the bar.
-  function notify(title, body, urgency) {
-    var args = [
-      "/usr/share/omarchy/bin/omarchy-notification-send",
-      "--app-name", "Fast Lid",
-      "-u", urgency || "low",
-      "-t", "6000",
-      title
-    ]
-    if (body) args.push(body)
-    Quickshell.execDetached(args)
+  Timer {
+    interval: 1000
+    repeat: true
+    running: root.expiresAt > 0
+    onTriggered: root.updateCountdown()
   }
 
   // logind treats a block inhibitor on handle-lid-switch as a reason to ignore
@@ -66,8 +81,15 @@ Item {
       if (!root.wantHeld) return
 
       root.wantHeld = false
+      root.durationStep = 0
+      root.expiresAt = 0
+      root.remainingSeconds = 0
       root.lastError = "systemd-inhibit exited unexpectedly"
-      root.notify("Lid hold failed", root.lastError, "critical")
+      Quickshell.execDetached([
+        "/usr/share/omarchy/bin/omarchy-notification-send",
+        "--app-name", "Fast Lid", "-u", "critical", "-t", "6000",
+        "Lid hold failed", root.lastError
+      ])
     }
   }
 

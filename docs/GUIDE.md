@@ -19,9 +19,13 @@ configuration.
 
 - Solid laptop icon: hold enabled.
 - Slashed laptop icon: hold disabled.
-- Click either icon on any bar surface to toggle the shared state.
-- A small themed ON/OFF card appears immediately beside the clicked icon;
-  only failures send an Omarchy notification.
+- Right-click either icon on any bar surface to toggle the hold and show the
+  duration slider. Left-click opens the slider without toggling the hold.
+- The left end turns the hold off; choose 15 minutes to 8 hours in 15-minute
+  steps, or the far right (ON) for an unlimited hold. Selecting a duration starts a
+  fresh timer, and the hold stops when that timer expires. The panel displays
+  the remaining time in hours, minutes, and seconds.
+- Click outside the panel to close it. Only failures send an Omarchy notification.
 - The `clouddown.fast-lid` shell toggle can also be used from Omarchy's shell
   interface.
 

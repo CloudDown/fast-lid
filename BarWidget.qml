@@ -17,12 +17,26 @@ BarWidget {
   // bar it is the black or white the bar computed against the wallpaper.
   readonly property color ink: bar ? bar.barForeground : Commons.Color.foreground
 
-  property bool feedbackOpen: false
-  property string feedbackText: ""
+  property bool panelOpen: false
+
+  function durationLabel(step) {
+    if (step <= 0) return "OFF"
+    if (step >= 33) return "ON"
+    var minutes = step * 15
+    var hours = Math.floor(minutes / 60)
+    var remainder = minutes % 60
+    return (hours ? hours + " h" : "") + (remainder ? (hours ? " " : "") + remainder + " min" : "")
+  }
+
+  function countdownLabel(seconds) {
+    var hours = Math.floor(seconds / 3600)
+    var minutes = Math.floor(seconds % 3600 / 60)
+    var secs = seconds % 60
+    return (hours ? hours + "h " : "") + minutes + " min " + secs + " sec"
+  }
 
   function close() {
-    feedbackTimer.stop()
-    feedbackOpen = false
+    panelOpen = false
   }
 
   Connections {
@@ -32,12 +46,6 @@ BarWidget {
         root.close()
       }
     }
-  }
-
-  Timer {
-    id: feedbackTimer
-    interval: 1300
-    onTriggered: root.close()
   }
 
   implicitWidth: button.implicitWidth
@@ -89,37 +97,55 @@ BarWidget {
       }
     }
     onPressed: function(buttonCode) {
-      if (buttonCode === Qt.LeftButton && root.hold) {
-        root.feedbackText = root.held ? "OFF" : "ON"
-        root.feedbackOpen = true
-        feedbackTimer.restart()
+      if (!root.hold) return
+      if (buttonCode === Qt.RightButton) {
         root.hold.toggle()
+        root.panelOpen = true
+      } else if (buttonCode === Qt.LeftButton) {
+        root.hold.updateCountdown()
+        root.panelOpen = !root.panelOpen
       }
     }
   }
 
-  // Passive native popout: no keyboard focus or outside-click grab for a
-  // short status acknowledgement. PopupCard handles the bar edge and theme.
   PopupCard {
-    id: feedback
     anchorItem: root
     bar: root.bar
     owner: root
-    open: root.feedbackOpen
-    triggerMode: "hover"
-    padding: Style.space(8)
-    contentWidth: Style.space(62)
-    contentHeight: feedback.fittedContentHeight(label.implicitHeight)
+    open: root.panelOpen
+    contentWidth: fittedContentWidth(Style.space(280))
+    contentHeight: fittedContentHeight(content.implicitHeight)
 
-    Text {
-      id: label
-      anchors.centerIn: parent
-      textFormat: Text.PlainText
-      text: root.feedbackText
-      color: Commons.Color.popups.text
-      font.family: root.bar ? root.bar.fontFamily : Style.font.family
-      font.pixelSize: Style.font.body
-      font.bold: true
+    Column {
+      id: content
+      width: parent.width
+      spacing: Style.space(8)
+
+      Text {
+        id: label
+        width: parent.width
+        horizontalAlignment: Text.AlignHCenter
+        textFormat: Text.PlainText
+        text: slider.dragging ? root.durationLabel(slider.liveValue)
+          : root.hold && root.hold.expiresAt > 0 ? root.countdownLabel(root.hold.remainingSeconds)
+          : root.durationLabel(slider.value)
+        color: Commons.Color.popups.text
+        font.family: root.bar ? root.bar.fontFamily : Style.font.family
+        font.pixelSize: Math.round(Style.font.body * 1.25)
+        font.bold: true
+      }
+
+      PanelSlider {
+        id: slider
+        width: parent.width
+        bar: root.bar
+        minimum: 0
+        maximum: 33
+        step: 1
+        integer: true
+        value: root.hold ? root.hold.durationStep : 0
+        onReleased: function(v) { if (root.hold) root.hold.setDuration(v) }
+      }
     }
   }
 }
